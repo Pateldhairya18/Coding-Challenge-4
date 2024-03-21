@@ -1,0 +1,69 @@
+import re
+
+
+# Function to validate if the input date is in the correct format
+def validate_date(date_str):
+    # Check if the input matches either "month/day/year" or "Month day, year" format
+    pattern1 = r"^(0?[1-9]|1[0-2])/(0?[1-9]|[12][0-9]|3[01])/(\d{4})$"
+    pattern2 = r"^(January|February|March|April|May|June|July|August|September|October|November|December) (0?[1-9]|[12][0-9]|3[01]), (\d{4})$"
+
+    if re.match(pattern1, date_str) or re.match(pattern2, date_str):
+        return True
+    else:
+        return False
+
+
+# Function to convert the input date to YYYY-MM-DD format
+def convert_to_iso(date_str):
+    # Define month mapping
+    months = {
+        'January': '01',
+        'February': '02',
+        'March': '03',
+        'April': '04',
+        'May': '05',
+        'June': '06',
+        'July': '07',
+        'August': '08',
+        'September': '09',
+        'October': '10',
+        'November': '11',
+        'December': '12'
+    }
+
+    # If input date matches "month/day/year" format
+    if '/' in date_str:
+        parts = date_str.split('/')
+        month = parts[0].zfill(2)
+        day = parts[1].zfill(2)
+        year = parts[2]
+        return f"{year}-{month}-{day}"
+
+    # If input date matches "Month day, year" format
+    else:
+        parts = date_str.split(' ')
+        month = months[parts[0]]
+        day = parts[1].replace(',', '').zfill(2)
+        year = parts[2]
+        return f"{year}-{month}-{day}"
+
+
+# Main program
+while True:
+    user_input = input("Enter a date (month/day/year or Month day, year): ")
+
+    if validate_date(user_input):
+        iso_date = convert_to_iso(user_input)
+        print("Date in YYYY-MM-DD format:", iso_date)
+        break
+    else:
+        print("Invalid date format. Please enter the date again.")
+
+
+# Output
+
+#Enter a date (month/day/year or Month day, year): 8 September 2014
+#Invalid date format. Please enter the date again.
+
+#Enter a date (month/day/year or Month day, year): 9/8/2014
+#Date in YYYY-MM-DD format: 2014-09-08
